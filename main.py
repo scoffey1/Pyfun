@@ -1,3 +1,4 @@
+#This code will run by itself, but its is not hooked up to a database. Also the program is very basic in design.
 import tkinter as tk
 from tkinter import messagebox
 import pandas as pd

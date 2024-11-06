@@ -10,6 +10,9 @@ class FinanceTracker:
         self.root = root
         self.root.title("Finance Tracker")
 
+        # Set initial window size
+        self.root.geometry("300x200")
+       
         # Set custom icon (Make sure you have an "icon.ico" file in the same directory)
         self.root.iconphoto(False, tk.PhotoImage(file="finance_tracker_app.ico"))  # Replace with your icon path
 

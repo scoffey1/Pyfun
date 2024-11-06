@@ -1,8 +1,8 @@
 #This code will run by itself, but its is not hooked up to a database. Also the program is very basic in design.
 import tkinter as tk
 from tkinter import messagebox
+from tkcalendar import DateEntry
 import pandas as pd
-from datetime import datetime
 
 
 class FinanceTracker:
@@ -10,9 +10,15 @@ class FinanceTracker:
         self.root = root
         self.root.title("Finance Tracker")
 
+        # Set custom icon (Make sure you have an "icon.ico" file in the same directory)
+        self.root.iconphoto(False, tk.PhotoImage(file="finance_tracker_app.ico"))  # Replace with your icon path
+
+        # Set background color
+        self.root.configure(bg="#f0f4f8")  # Light background color
+
         # Make the grid layout responsive
         self.root.columnconfigure(1, weight=1)
-        for i in range(3):  # Configure rows to expand as needed
+        for i in range(3):
             self.root.rowconfigure(i, weight=1)
 
         # Initialize data storage
@@ -22,31 +28,36 @@ class FinanceTracker:
         self.create_widgets()
 
     def create_widgets(self):
-        # Entry for Date
-        tk.Label(self.root, text="Date (YYYY-MM-DD):").grid(row=0, column=0, sticky="e")
-        self.date_entry = tk.Entry(self.root)
+        # Label and Entry for Date with custom colors
+        tk.Label(self.root, text="Date:", bg="#f0f4f8", fg="#333333", font=("Arial", 10)).grid(row=0, column=0,
+                                                                                               sticky="e")
+        self.date_entry = DateEntry(self.root, width=12, background='#0066cc', foreground='white', borderwidth=2)
         self.date_entry.grid(row=0, column=1, sticky="ew", padx=5, pady=5)
 
-        # Entry for Description
-        tk.Label(self.root, text="Description:").grid(row=1, column=0, sticky="e")
-        self.desc_entry = tk.Entry(self.root)
+        # Label and Entry for Description
+        tk.Label(self.root, text="Description:", bg="#f0f4f8", fg="#333333", font=("Arial", 10)).grid(row=1, column=0,
+                                                                                                      sticky="e")
+        self.desc_entry = tk.Entry(self.root, bg="#ffffff", fg="#333333", font=("Arial", 10))
         self.desc_entry.grid(row=1, column=1, sticky="ew", padx=5, pady=5)
 
-        # Entry for Amount
-        tk.Label(self.root, text="Amount:").grid(row=2, column=0, sticky="e")
-        self.amount_entry = tk.Entry(self.root)
+        # Label and Entry for Amount
+        tk.Label(self.root, text="Amount:", bg="#f0f4f8", fg="#333333", font=("Arial", 10)).grid(row=2, column=0,
+                                                                                                 sticky="e")
+        self.amount_entry = tk.Entry(self.root, bg="#ffffff", fg="#333333", font=("Arial", 10))
         self.amount_entry.grid(row=2, column=1, sticky="ew", padx=5, pady=5)
 
-        # Add Button
-        add_button = tk.Button(self.root, text="Add Entry", command=self.add_entry)
+        # Add Entry Button with custom colors
+        add_button = tk.Button(self.root, text="Add Entry", command=self.add_entry, bg="#4caf50", fg="white",
+                               font=("Arial", 10))
         add_button.grid(row=3, column=0, columnspan=2, sticky="ew", padx=5, pady=5)
 
-        # Display Button
-        display_button = tk.Button(self.root, text="Display Entries", command=self.display_entries)
+        # Display Entries Button with custom colors
+        display_button = tk.Button(self.root, text="Display Entries", command=self.display_entries, bg="#2196f3",
+                                   fg="white", font=("Arial", 10))
         display_button.grid(row=4, column=0, columnspan=2, sticky="ew", padx=5, pady=5)
 
     def add_entry(self):
-        date = self.date_entry.get()
+        date = self.date_entry.get()  # Get date from DateEntry widget
         description = self.desc_entry.get()
         amount = self.amount_entry.get()
 
@@ -55,48 +66,6 @@ class FinanceTracker:
             messagebox.showwarning("Input Error", "All fields must be filled out")
             return
 
-        # Validate date format
-        try:
-            datetime.strptime(date, "%Y-%m-%d")
-        except ValueError:
-            messagebox.showwarning("Input Error", "Date must be in YYYY-MM-DD format")
-            return
-
         # Validate amount as a float
         try:
             amount = float(amount)
-        except ValueError:
-            messagebox.showwarning("Input Error", "Amount must be a number")
-            return
-
-        # Add entry to the data
-        self.data = self.data.append({"Date": date, "Description": description, "Amount": amount}, ignore_index=True)
-        messagebox.showinfo("Success", "Entry added successfully")
-
-        # Clear entries after adding
-        self.date_entry.delete(0, tk.END)
-        self.desc_entry.delete(0, tk.END)
-        self.amount_entry.delete(0, tk.END)
-
-    def display_entries(self):
-        if self.data.empty:
-            messagebox.showinfo("No Data", "No entries to display")
-            return
-
-        # Display the data in a new window
-        display_window = tk.Toplevel(self.root)
-        display_window.title("Entries")
-
-        display_window.columnconfigure(0, weight=1)  # Make text widget responsive
-        display_window.rowconfigure(0, weight=1)
-
-        text = tk.Text(display_window)
-        text.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)  # Make text widget fill the window
-
-        text.insert(tk.END, self.data.to_string(index=False))
-
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = FinanceTracker(root)
-    root.mainloop()
